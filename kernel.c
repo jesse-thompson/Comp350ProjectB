@@ -1,4 +1,4 @@
-// Jesse Thompson
+// Jesse Thompson, TJ Bourget
 // COMP 350
 // ProjectB
 
@@ -11,25 +11,22 @@ void main ()
 {
     // vars must be defined at top of file
     char myLetter = 'W';
-
-    makeInterrupt21();
-    printChar('Z');
-    // assume interrupt 21 v100 is printChar
-    interrupt(0x21, 100, myLetter, 0, 0);
-
-
-    // test readString()
     char line[80];
-    printString("Enter a line: ");
-    readString(line);
-    printString(line);
-
-    // test readSector()
     char buffer[512];
-    readSector(buffer, 30);
-    printString(buffer);
 
-	while(1){}
+    //Test interrupts
+    makeInterrupt21();
+    //Test printChar()
+    interrupt(0x21,100,myLetter,0,0);
+    //Test readString()
+    interrupt(0x21,1,line,0,0);
+    //Test printString()
+    interrupt(0x21,0,line,0,0);
+    //Test readSector() (requires printString() to be functional to see if it worked)
+    interrupt(0x21,2,buffer,30,0);
+    interrupt(0x21,0,buffer,0,0);
+
+    while(1);
 }
 
 void readString(char* argv[])
@@ -63,15 +60,6 @@ void printChar(char c)
     // can also be interrupt(0x10, 0xe * 256 + c, 0, 0, 0);
 }
 
-void handleInterrupt21 (int AX, int BX, int CX, int DX)
-{
-    if(AX = 100)
-    {
-        printChar('T');
-    }
-
-}
-
 void readSector(char* buffer, int sector)
 {
     int ah = 2;             // tells BIOS to read sector
@@ -84,5 +72,23 @@ void readSector(char* buffer, int sector)
 
     interrupt(0x13, buffer = sector);
 
-    return;
+//Chooses the proper interrupt function call based on the value of 'ax'
+{
+	switch(ax)
+	{
+		case 0:
+			printString(bx);
+			break;
+		case 1:
+			readString(bx);
+			break;
+		case 2:
+			readSector(bx, cx);
+			break;
+		case 100:
+			readChar(bx);
+			break;
+		default:
+			printString("No interrupt function correlated with AX number");
+	}
 }
