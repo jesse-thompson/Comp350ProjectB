@@ -1,0 +1,11 @@
+.~lock.OSProjectB_2022.doc#
+OSProjectB_2022.doc
+bootload
+disk.img
+diskc.img
+test.img
+kernel.o
+kernel_asm.o
+kernel_c.o
+simulator.jar
+kernel
