@@ -1,98 +1,93 @@
-// Jesse Thompson, TJ Bourget
-// COMP 350
-// ProjectB
+//TJ Bourget
 
-//Prototypes
-void printChar(char); 
+void printChar(char);
 void printString(char*);
 void readString(char*);
-void readSector(char*,int);
+void readSector(char*, int);
 void handleInterrupt21(int,int,int,int);
 
-void main ()
+void main()
 {
-    // vars must be defined at top of file
-    char myLetter = 'W';
-    char line[80];
-    char buffer[512];
-
-    //Test interrupts
+    char userInput[80];
+    char fileInput[512];
+    
     makeInterrupt21();
-    //Test printChar()
-    interrupt(0x21,100,myLetter,0,0);
-    //Test readString()
-    interrupt(0x21,1,line,0,0);
-    //Test printString()
-    interrupt(0x21,0,line,0,0);
-    //Test readSector() (requires printString() to be functional to see if it worked)
-    interrupt(0x21,2,buffer,30,0);
-    interrupt(0x21,0,buffer,0,0);
+    interrupt(0x21,1,userInput,0,0);
+    interrupt(0x21,0,userInput,0,0);
+    interrupt(0x21,2,fileInput,30,0);
+    interrupt(0x21,0,fileInput,0,0);
 
-    while(1);
+	while(1);
 }
 
-//Sean's function
-void readString(char* argv[])
-{
-    int i = 0;
-    char* currentString[80];
-    while (*argv[i] != 0xd)
-    {
-        interrupt(0x16, currentString[i] = argv[i]);
-        i++;
-    }
-
-    *argv[i + 1] = 0xa;
-    *argv[i + 2] = 0x0;
-
-    return;
-}
-
-//Craig's Function
-void printString(char* chars)
-{
-    chars[sizeof(chars)] = 0x0;
-    // print out the char array
-}
-
-//TJ's function
 void printChar(char c)
 {
     interrupt(0x10, 0xe*256+c,0,0,0);
 }
 
-//Jesse's function
+void printString(char* chars)
+{
+    int increment = 0;
+    while(chars[increment] != 0x0)
+    {
+        interrupt(0x10, 0xe*256+chars[increment],0,0,0);
+        increment++;
+    }
+}
+
+void readString(char* chars)
+{
+    int currIndex = 0;
+    chars[currIndex] = interrupt(0x16, 0,0,0,0);
+    printChar(chars[currIndex]);
+    
+    while(chars[currIndex] != 0xd && currIndex < 80)
+    {
+        char input = interrupt(0x16, 0,0,0,0);
+        if(input == 0x8)
+        {
+            if(currIndex >= 0)
+            {
+                currIndex--;
+                printChar(0x8);  
+                printChar(' ');
+                printChar(0x8);            
+            }
+        }
+        else
+        {
+            currIndex ++;  
+            chars[currIndex] = input;
+            printChar(input);       
+        }
+    }
+    printChar(0xa);    
+    
+    chars[currIndex+1] = 0xa;
+    chars[currIndex+2] = 0x0;
+}
+
 void readSector(char* buffer, int sector)
 {
-    int ah = 2;             // tells BIOS to read sector
-    int al = 1;             // number of sectors to use
-    int bx = buffer;        // address where data should be stored
-    int ch = 0;             // track number
-    int cl = sector + 1;    // relative sector number
-    int dh = 0;             // head number
-    int dl = 0x80;          // device number
-
-    interrupt(0x13, buffer = sector);
+    interrupt(0x13, 2*256+1, buffer, sector+1, 0x80);
 }
 
-//Chooses the proper interrupt function call based on the value of 'ax'
 void handleInterrupt21(int ax, int bx, int cx, int dx)
 {
-	switch(ax)
-	{
-		case 0:
-			printString(bx);
-			break;
-		case 1:
-			readString(bx);
-			break;
-		case 2:
-			readSector(bx, cx);
-			break;
-		case 100:
-			readChar(bx);
-			break;
-		default:
-			printString("No interrupt function correlated with AX number");
-	}
+    switch(ax)
+    {
+        case 0:
+            printString(bx);
+            break;
+        case 1:
+            readString(bx);
+            break;
+        case 2:
+            readSector(bx, cx);
+            break;
+        default:
+            printString("No interrupt function correlated with AX number");
+        
+    }
 }
+
