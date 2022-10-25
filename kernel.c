@@ -51,7 +51,7 @@ void readString(char* argv[])
 void printString(char* chars)
 {
     chars[sizeof(chars)] = 0x0;
-    printf('%s', chars);
+    // print out the char array
 }
 
 void printChar(char c)
