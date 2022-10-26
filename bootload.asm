@@ -40,3 +40,4 @@ KSTART	equ	3	;kernel lives at sector 3
 
 	;AA55 tells BIOS that this is a valid bootloader
 	dw 0xAA55
+
