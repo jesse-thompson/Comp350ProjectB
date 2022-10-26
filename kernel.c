@@ -1,16 +1,33 @@
-// Jesse Thompson
+// Jesse Thompson, TJ Bourget, Sean Tammelleo, Craig Kimello
 // COMP 350
 // ProjectB
 
-#include <stdio.h>
-#include <string.h>
-
-void printChar(char);   // prototype function to establish the function to avoid errors
+//Prototypes
+void printChar(char);
+void printString(char*);
+void readString(char*);
+void readSector(char*,int);
+void handleInterrupt21(int,int,int,int);
 
 void main ()
 {
     // vars must be defined at top of file
     char myLetter = 'W';
+    char line[80];
+    char buffer[512];
+
+    //Test interrupts
+    makeInterrupt21();
+    //Test printChar()
+    interrupt(0x21,100,myLetter,0,0);
+    //Test readString()
+    interrupt(0x21,1,line,0,0);
+    //Test printString()
+    interrupt(0x21,0,line,0,0);
+    //Test readSector() (requires printString() to be functional to see if it worked)
+    interrupt(0x21,2,buffer,30,0);
+    interrupt(0x21,0,buffer,0,0);
+
 
     makeInterrupt21();
     printChar('Z');

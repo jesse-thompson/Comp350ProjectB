@@ -9,3 +9,5 @@ kernel_asm.o
 kernel_c.o
 simulator.jar
 kernel
+kernel_orig.c
+.idea
