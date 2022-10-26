@@ -49,6 +49,7 @@ void main ()
 	while(1){}
 }
 
+// Sean's function
 void readString(char* argv[])
 {
     int i = 0;
@@ -65,12 +66,14 @@ void readString(char* argv[])
     return;
 }
 
+// Craig's function
 void printString(char* chars)
 {
     chars[sizeof(chars)] = 0x0;
     // print out the char array
 }
 
+// TJ's function
 void printChar(char c)
 {
     // call _interrupt(number, ax, bx, cx, dx)
@@ -89,6 +92,7 @@ void handleInterrupt21 (int AX, int BX, int CX, int DX)
 
 }
 
+// Jesse's function
 void readSector(char* buffer, int sector)
 {
     int ah = 2;             // tells BIOS to read sector
@@ -102,4 +106,26 @@ void readSector(char* buffer, int sector)
     interrupt(0x13, buffer = sector);
 
     return;
+}
+
+//Chooses the proper interrupt function call based on the value of 'ax'
+void handleInterrupt21(int ax, int bx, int cx, int dx)
+{
+    switch(ax)
+    {
+        case 0:
+            printString(bx);
+            break;
+        case 1:
+            readString(bx);
+            break;
+        case 2:
+            readSector(bx, cx);
+            break;
+        case 100:
+            readChar(bx);
+            break;
+        default:
+            printString("No interrupt function correlated with AX number");
+    }
 }
