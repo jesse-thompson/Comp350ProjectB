@@ -3,7 +3,7 @@
 // Jesse
 // Sean
 
-//This is a kernel for part 1 of OSProjectB
+//This is a kernel for parts 1 and 2 of OSProjectB
 
 void printString(char*);
 void printChar(char);
@@ -19,8 +19,9 @@ int main()
     printString("Hello World!\r\n\0");
 
     // Testing printString as an interrupt
-    interrupt(0x21, 0, "Greetings World!\0", 0, 0); // I get how to call printString using interrupt 0x21, but not how to pass in a string to it.
+    interrupt(0x21, 0, "Enter in some text: \0", 0, 0); // I get how to call printString using interrupt 0x21, but not how to pass in a string to it.
 
+    //
     interrupt(0x21, 1, line, 0, 0);
 
     while(1){}
@@ -49,6 +50,9 @@ void printString(char* chars)
 
 void readString(char* line)
 {
+    // Reads in keys pressed form the user in real time using interrupts.
+    // After reading, prints out what was typed also using interrupts.
+
     int index = 0;
 
     while (1) { // Stop when user enters 'enter' aka ascii code: 0xD
@@ -61,19 +65,20 @@ void readString(char* line)
                 index--;
                 printChar(0x08);
                 printChar(' ');
-                printChar(' ');
+                printChar(0x08);
             }
         }
         else {
             line[index] = userChar;
-            printChar(userChar);
+            printChar(userChar); // Prints out what the user just entered
             index++;
         }
         // If user pressed enter
         if (userChar == 0xD)
         {
             printChar(0xA); // prints out a carriage return
-            line[index + 1] = 0x0; // Adds \0 to the end of the line
+            line[index] = 0x0; // Adds \0 to the end of the line
+            interrupt(0x21, 0, "You entered: ", 0, 0);
             interrupt(0x21, 0, line, 0, 0); // calls printString(line) to print the line
             break;
         }
@@ -85,6 +90,8 @@ void readString(char* line)
 
 void handleInterrupt21(int AX, int BX, int CX, int DX)
 {
+    // Lets interrupt 21 call on 3 different interrupts.
+
     if (AX == 0)
     {
         printString(BX);
