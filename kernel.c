@@ -1,16 +1,27 @@
 //Craig Kimball 10/21/22
+// TJ
+// Jesse
+// Sean
+
 //This is a kernel for part 1 of OSProjectB
 
 void printString(char*);
 void printChar(char);
+void readString();
 
 int main()
 {
     char line[80];
+
     makeInterrupt21();
 
-    printString("Hello World!\0");
-    interrupt(0x21, 0, line, 0, 0);
+    // Testing printString as a function
+    printString("Hello World!\r\n\0");
+
+    // Testing printString as an interrupt
+    interrupt(0x21, 0, "Greetings World!\0", 0, 0); // I get how to call printString using interrupt 0x21, but not how to pass in a string to it.
+
+    interrupt(0x21, 1, line, 0, 0);
 
     while(1){}
     return 0;
@@ -36,6 +47,41 @@ void printString(char* chars)
 
 }
 
+void readString(char* line)
+{
+    int index = 0;
+
+    while (1) { // Stop when user enters 'enter' aka ascii code: 0xD
+        // interrupt 0x16 does not display to the screen
+        char userChar = interrupt(0x16, 0, 0, 0, 0);
+        if (userChar == 0x08) // Don't save the backspace into the array, overwrite charcters instead
+        {
+            // Do backspace stuff
+            if (index != 0) {
+                index--;
+                printChar(0x08);
+                printChar(' ');
+                printChar(' ');
+            }
+        }
+        else {
+            line[index] = userChar;
+            printChar(userChar);
+            index++;
+        }
+        // If user pressed enter
+        if (userChar == 0xD)
+        {
+            printChar(0xA); // prints out a carriage return
+            line[index + 1] = 0x0; // Adds \0 to the end of the line
+            interrupt(0x21, 0, line, 0, 0); // calls printString(line) to print the line
+            break;
+        }
+
+    }
+
+}
+
 
 void handleInterrupt21(int AX, int BX, int CX, int DX)
 {
@@ -45,7 +91,7 @@ void handleInterrupt21(int AX, int BX, int CX, int DX)
     }
     else if (AX == 1)
     {
-        //readString(CX);
+        readString(BX);
     }
     else if (AX == 2)
     {
