@@ -32,21 +32,36 @@ void main ()
 }
 
 //Sean's function
-void readString(char* argv[])
+void readString(char* letter)
 {
-    int i = 0;
-    char* currentString[80];
-    while (*argv[i] != 0xd)
+    int index = 0;
+    //getting letter and printing to screen
+    letter[index] = interrupt(0x16,0,0,0,0);
+    printChar(letter[index]);
+
+    //check if enter key is pressed and under string limit but not zero
+    while (letter[index] != 0xd  && 0 < index < 80)
     {
-        interrupt(0x16, currentString[i] = argv[i]);
-        i++;
+        char inputLetter = interrupt(0x16,0,0,0,0);
+        //if input is backspace
+        if (inputLetter == 0x8){
+            index--;
+            printChar(0x8);
+            printChar(' ');
+            printChar(0x8);
+        }
+        else{
+            index++;
+            letter[index] = inputLetter;
+            printChar(letter[index]);
+        }
     }
-
-    *argv[i + 1] = 0xa;
-    *argv[i + 2] = 0x0;
-
-    return;
+    //once enter key pressed
+    letter[index+1] = 0xa;
+    letter[index+2] = 0x0;
+    printChar(0xa);
 }
+
 
 //Craig's Function
 void printString(char* chars)
