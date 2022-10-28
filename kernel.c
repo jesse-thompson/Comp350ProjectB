@@ -1,4 +1,4 @@
-// Jesse Thompson, TJ Bourget
+// Jesse Thompson, TJ Bourget, Sean Tammelleo
 // COMP 350
 // ProjectB
 
