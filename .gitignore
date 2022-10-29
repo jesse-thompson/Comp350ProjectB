@@ -11,3 +11,5 @@ simulator.jar
 kernel
 kernel_orig.c
 .idea
+kernelasm.o
+kernelasm_c.o
