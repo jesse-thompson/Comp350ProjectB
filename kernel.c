@@ -1,3 +1,4 @@
+// Jesse Thompson
 // Team Awesome: Jesse Thompson, TJ Bourget, Sean Tammelleo, Craig Kimello
 // COMP 350 - 001
 // ProjectB
