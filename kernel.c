@@ -10,12 +10,19 @@ void handleInterrupt21(int,int,int,int);
 
 void main()
 {
+    // Tests printString()
 //    printString("Hello World");
 
-    char line[80];
-    printString("Enter a line: ");
-    readString(line);
-    printString(line);
+    // Tests readString()
+//    char line[80];
+//    printString("Enter a line: ");
+//    readString(line);
+//    printString(line);
+
+    // Tests readSector()
+    char buffer[512];
+    readSector(buffer, 30);
+    printString(buffer);
 
     while (1);
 }
