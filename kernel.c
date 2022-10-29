@@ -70,8 +70,6 @@ void printChar(char c)
 
 void readSector(char* buffer, int sector)
 {
-    char bx[] = buffer;     // address where data should be stored
-
     int ah = 2;             // tells BIOS to read sector
     int al = 1;             // number of sectors to use
     int ax = ah * 256 + al;
@@ -84,7 +82,7 @@ void readSector(char* buffer, int sector)
     int dl = 0x80;          // device number
     int dx = dh * 256 + dl;
 
-    interrupt(0x13, ax, bx, cx, dx);
+    interrupt(0x13, ax, buffer, cx, dx);
 }
 
 // Chooses the proper interrupt function call based on the value of 'ax'
