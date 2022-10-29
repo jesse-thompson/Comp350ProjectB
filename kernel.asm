@@ -1,4 +1,3 @@
-;Jesse Thompson
 ;kernel.asm
 ;Margaret Black, 2007
 
