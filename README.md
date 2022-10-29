@@ -1,6 +1,6 @@
-Project B
-COMP350-001 Fall 2022
-10/28/2022
+#Project B  
+COMP350-001 Fall 2022  
+10/28/2022  
 Contributors: Jesse Thompson, TJ Bourget, Sean Tammelleo, Craig Kimello
 
 In this project, we created a kernel that performs system calls.
