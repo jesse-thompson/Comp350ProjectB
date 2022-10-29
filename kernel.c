@@ -19,31 +19,6 @@ void main()
     interrupt(0x21,2,fileInput,30,0);
     interrupt(0x21,0,fileInput,0,0);
 
-
-    // Tests Step1: printString()
-//    printString("Hello World");
-
-    // Tests Step2: readString()
-//    char line[80];
-//    printString("Enter a line: ");
-//    readString(line);
-//    printString(line);
-
-    // Tests Step3: readSector()
-//    char buffer[512];
-//    readSector(buffer, 30);
-//    printString(buffer);
-
-    // Tests Step4: makeInterrupt21()
-//    makeInterrupt21();
-//    interrupt(0x21, 0, 0, 0, 0);
-
-    // Tests
-//    char line[80];
-//    makeInterrupt21();
-//    interrupt(0x21, 1, line, 0, 0);
-//    interrupt(0x21, 0, line, 0, 0);
-
     while (1);
 }
 
