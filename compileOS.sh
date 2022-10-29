@@ -1,3 +1,4 @@
+# Jesse Thompson
 dd if=/dev/zero of=diskc.img bs=512 count=256
 nasm bootload.asm
 dd if=bootload of=diskc.img conv=notrunc

@@ -1,4 +1,5 @@
 # Project B  
+Jesse Thompson  
 COMP350-001 Fall 2022  
 10/28/2022  
 Contributors: Jesse Thompson, TJ Bourget, Sean Tammelleo, Craig Kimello
@@ -8,5 +9,7 @@ The system calls perform reading of keyboard inputs, including backspace, then p
 to the screen, removing characters when backspace is used.
 
 I specifically wrote the readSector() function and collaborated on other parts.
+
+To test the functions, simply run the simulator
 
 The GitHub repository can be found here: https://github.com/jesse-thompson/Comp350ProjectB
