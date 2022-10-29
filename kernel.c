@@ -10,19 +10,39 @@ void handleInterrupt21(int,int,int,int);
 
 void main()
 {
-    // Tests printString()
+    char userInput[80];
+    char fileInput[512];
+
+    makeInterrupt21();
+    interrupt(0x21,1,userInput,0,0);
+    interrupt(0x21,0,userInput,0,0);
+    interrupt(0x21,2,fileInput,30,0);
+    interrupt(0x21,0,fileInput,0,0);
+
+
+    // Tests Step1: printString()
 //    printString("Hello World");
 
-    // Tests readString()
+    // Tests Step2: readString()
 //    char line[80];
 //    printString("Enter a line: ");
 //    readString(line);
 //    printString(line);
 
-    // Tests readSector()
-    char buffer[512];
-    readSector(buffer, 30);
-    printString(buffer);
+    // Tests Step3: readSector()
+//    char buffer[512];
+//    readSector(buffer, 30);
+//    printString(buffer);
+
+    // Tests Step4: makeInterrupt21()
+//    makeInterrupt21();
+//    interrupt(0x21, 0, 0, 0, 0);
+
+    // Tests
+//    char line[80];
+//    makeInterrupt21();
+//    interrupt(0x21, 1, line, 0, 0);
+//    interrupt(0x21, 0, line, 0, 0);
 
     while (1);
 }
@@ -42,17 +62,17 @@ void readString(char* letter)
 {
     int index = 0;
     //getting letter and printing to screen
-    letter[index] = interrupt(0x16 ,0 ,0 ,0 ,0);
+    letter[index] = interrupt(0x16, 0, 0, 0,0);
     printChar(letter[index]);
 
     //check if enter key is pressed and under string limit but not zero
     while (letter[index] != 0xd  && 0 < index < 80)
     {
-        char inputLetter = interrupt(0x16 ,0 ,0 ,0 ,0);
+        char inputLetter = interrupt(0x16, 0, 0, 0, 0);
         //if input is backspace
         if (inputLetter == 0x8)
         {
-            if(currIndex >= 0)
+            if(index >= 0)
             {
                 index--;
                 printChar(0x8);
@@ -74,7 +94,7 @@ void readString(char* letter)
 
 void printChar(char c)
 {
-    interrupt(0x10, 0xe*256+c ,0 ,0 ,0);
+    interrupt(0x10, 0xe*256+c, 0, 0, 0);
 }
 
 void readSector(char* buffer, int sector)
