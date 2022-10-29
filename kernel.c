@@ -27,12 +27,10 @@ void main()
     while (1);
 }
 
-
+// Prints out the provided string to the console using interrupts
 void printString(char* chars)
 {
-    // Prints out the provided string to the console using interrupts
     int index = 0;
-
     while(chars[index] != 0x0)
     {
         interrupt(0x10, 0xe * 256 + chars[index], 0, 0, 0);
@@ -44,19 +42,23 @@ void readString(char* letter)
 {
     int index = 0;
     //getting letter and printing to screen
-    letter[index] = interrupt(0x16,0,0,0,0);
+    letter[index] = interrupt(0x16 ,0 ,0 ,0 ,0);
     printChar(letter[index]);
 
     //check if enter key is pressed and under string limit but not zero
     while (letter[index] != 0xd  && 0 < index < 80)
     {
-        char inputLetter = interrupt(0x16,0,0,0,0);
+        char inputLetter = interrupt(0x16 ,0 ,0 ,0 ,0);
         //if input is backspace
-        if (inputLetter == 0x8){
-            index--;
-            printChar(0x8);
-            printChar(' ');
-            printChar(0x8);
+        if (inputLetter == 0x8)
+        {
+            if(currIndex >= 0)
+            {
+                index--;
+                printChar(0x8);
+                printChar(' ');
+                printChar(0x8);
+            }
         }
         else{
             index++;
@@ -72,7 +74,7 @@ void readString(char* letter)
 
 void printChar(char c)
 {
-    interrupt(0x10, 0xe*256+c,0,0,0);
+    interrupt(0x10, 0xe*256+c ,0 ,0 ,0);
 }
 
 void readSector(char* buffer, int sector)
